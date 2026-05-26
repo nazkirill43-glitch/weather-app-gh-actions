@@ -1,72 +1,76 @@
-# weather-app-gh-actions
+# Weather App - GitHub Actions CI/CD Pipeline
 
-# Weather App - GitHub Actions CI/CD
+Aplikacja pogodowa z automatycznym CI/CD pipeline'em GitHub Actions. Pipeline buduje multi-platform obrazy Docker, skanuje podatliwości i publikuje na GHCR.
 
-## Opis
+Autor: Kyryl Nazarov | Data: 2026-05-26
 
-Aplikacja pogodowa z automatycznym CI/CD pipeline'em używającym GitHub Actions.
+## Workflow
 
-## Workflow: Build and Push Multi-Platform Image
+Plik: `.github/workflows/build-and-push.yml`
 
-### Ścieżka pliku
-`.github/workflows/build-and-push.yml`
+Workflow uruchamia się automatycznie przy push'u do main lub otwieraniu Pull Request'a. Etapy: checkout kodu, setup Buildx, login do GHCR i DockerHub, build multi-platform (amd64 + arm64), CVE scan Docker Scout, sprawdzenie rezultatów, upload raportu.
 
-### Co robi workflow?
+## Zmienne Globalne
 
-1. **Checkout** - Pobiera kod z repo
-2. **Setup Buildx** - Przygotowuje Docker Buildx dla multi-platform
-3. **Login GHCR** - Loguje się do GitHub Container Registry
-4. **Login DockerHub** - Loguje się do DockerHub (dla cache'a)
-5. **Build** - Buduje obraz dla `linux/amd64` i `linux/arm64`
-6. **CVE Scan** - Skanuje podatliwości (Docker Scout)
-7. **CVE Check** - Blokuje push jeśli znajduje CRITICAL/HIGH
-8. **Upload Report** - Zapisuje raport skanowania
+```yaml
+REGISTRY_GHCR: ghcr.io
+REGISTRY_DOCKERHUB: docker.io
+CACHE_REGISTRY: docker.io
+IMAGE_NAME_GHCR: ${{ github.repository }}
+IMAGE_NAME_DOCKERHUB: kaleefff/weather-app
+```
 
-### Tagowanie Obrazów
+## Build Multi-Platform
 
-Używamy **dwóch strategii tagowania**:
+Buduje dla linux/amd64 i linux/arm64. Pobiera cache z DockerHub, uploaduje zbudowany obraz na GHCR z dwoma tagami (latest i commit SHA), uploaduje cache z mode=max do DockerHub.
 
-#### 1. `latest` Tag
-- Zawsze wskazuje na ostatnią wersję
-- Dla developerów 
+## Tagowanie
 
-#### 2. Commit SHA Tag
-- Unikalny tag dla każdego commita
-- Dla produkcji
+- `latest` - ostatnia wersja
+- `commit-sha` - unikalny tag dla każdego commita
 
-### Uzasadnienie
-Ta strategia jest standard w industry:
-- Możliwość wybrania wersji 
-- Pełna historia buildów
-- Jasne czym się różnią wersje
+Dwutagowa strategia umożliwia szybki dostęp do ostatniej wersji i pełną reproducibility.
 
-### Cache Strategy
-**Cache Registry:** DockerHub (`kaleefff/weather-app:cache`)
+## CVE Scanning
 
-**Dlaczego DockerHub?**
-- Większy limit cache'a niż ghcr.io
-- Bardziej stabilny w CI/CD
-- Publiczny 
+Skanuje z Docker Scout. CRITICAL lub HIGH vulnerabilities powodują fail workflow'u - obraz nie jest uploadowany. MEDIUM/LOW przechodzą pomyślnie.
 
-**Mode: max**
-- Cachuje wszystkie warstwy
-- Największe przyspieszenie buildów
-- Rekomendowane dla CI/CD
+## Secrets Wymagane
 
-### CVE Scanning
-**Narzędzie:** Docker Scout
+`DOCKERHUB_USERNAME` - nazwa na DockerHub  
+`DOCKERHUB_TOKEN` - token z uprawnieniami Read, Write, Delete  
+`GHCR_PAT` - GitHub PAT z uprawnieniami write:packages, read:packages, delete:packages
 
-**Raport:** Dostępny w GitHub Actions > Artifacts
+## Cache Strategy
 
-### Secrets Konfiguracja
-Workflow wymaga następujących secrets w Settings → Secrets and variables → Actions:
-- `DOCKERHUB_USERNAME` - Nazwa na DockerHub
-- `DOCKERHUB_TOKEN` - Token DockerHub 
-- `GITHUB_TOKEN` - Automatycznie dostarczany przez GitHub
+DockerHub cache (`kaleefff/weather-app:cache`) ze względu na większy limit i niezawodność. Mode=max cachuje wszystkie warstwy dla przyspieszenia przyszłych buildów.
 
-### Obrazy
-**GHCR (GitHub Container Registry):**
+## Pull Image
 
-## Autor
-Kyryl Nazarov
+```bash
+docker login ghcr.io -u nazkirill43-glitch -p <GHCR_PAT>
+docker pull ghcr.io/nazkirill43-glitch/weather-app-gh-actions:latest
+```
 
+## Run Container
+
+```bash
+docker run -p 5000:5000 ghcr.io/nazkirill43-glitch/weather-app-gh-actions:latest
+# http://localhost:5000
+```
+
+## Struktura Repozytorium
+
+.github/workflows/build-and-push.yml - workflow
+app.py - Flask aplikacja
+Dockerfile - multi-stage build
+templates/index.html - HTML interfejs
+static/style.css - stylizacja
+README.md - dokumentacja
+
+## Linki
+
+GitHub: https://github.com/nazkirill43-glitch/weather-app-gh-actions  
+Actions: https://github.com/nazkirill43-glitch/weather-app-gh-actions/actions  
+GHCR: https://ghcr.io/nazkirill43-glitch/weather-app-gh-actions  
+DockerHub Cache: https://hub.docker.com/r/kaleefff/weather-app
