@@ -84,7 +84,7 @@ jobs:
       # Upload Scout Report
       - name: Upload Scout report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: scout-report
           path: scout-report.sarif
