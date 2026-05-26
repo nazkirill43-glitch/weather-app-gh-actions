@@ -1,0 +1,285 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Kontener */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Formularz */
+.form-section {
+    background-color: #fafafa;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+    border-radius: 3px;
+}
+
+/* Grupa formularza */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Etykiety */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Select */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+select:hover {
+    border-color: #333;
+}
+
+select:focus {
+    outline: none;
+    border-color: #333;
+    background-color: #fff;
+}
+
+select:disabled {
+    background-color: #e8e8e8;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Button */
+.btn-primary {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #0052a3;
+}
+
+.btn-primary:active:not(:disabled) {
+    background-color: #003d7a;
+}
+
+.btn-primary:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Wyniki */
+.weather-result {
+    margin-top: 30px;
+}
+
+.weather-result.hidden {
+    display: none;
+}
+
+/* Karta pogody */
+.weather-card {
+    background-color: #f0f8ff;
+    border: 2px solid #0066cc;
+    border-radius: 5px;
+    padding: 25px;
+}
+
+.weather-card h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.weather-card .coords {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Główna informacja */
+.weather-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 20px 0;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.temperature-box {
+    display: flex;
+    align-items: flex-start;
+}
+
+.temperature {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.unit {
+    font-size: 20px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.weather-description-box {
+    text-align: right;
+}
+
+.weather-description {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0066cc;
+}
+
+/* Szczegóły pogody */
+.weather-details {
+    margin-top: 20px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #666;
+}
+
+.detail-value {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Błędy */
+.error-message {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ff9999;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.error-message.hidden {
+    display: none;
+}
+
+/* Info */
+.info-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.info-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.8;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #0066cc;
+}
+
+/* Hidden */
+.hidden {
+    display: none !important;
+}
+
+/* Responsywność */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .temperature {
+        font-size: 36px;
+    }
+
+    .weather-main {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .weather-description-box {
+        text-align: left;
+        margin-top: 15px;
+    }
+
+    .detail-item {
+        flex-direction: column;
+    }
+
+    .detail-value {
+        margin-top: 5px;
+    }
+}
